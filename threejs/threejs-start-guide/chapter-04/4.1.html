@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Lambert材质</title>
+  <link rel="stylesheet" href="../assets/css/base.css">
+</head>
+<body>
+  <p>Lambert光照模型的主要特点是只考虑漫反射而不考虑镜面反射的效果，因而对于金属、镜子等需要镜面反射效果的物体就不适应，对于其他大部分物体的漫反射效果都是适用的。</p>
+  <div class="obj-wrapper">
+    <div class="item">
+      <p>
+        <em>color设置材质对散射光的反射能力</em>
+        <pre>
+            new THREE.MeshLambertMaterial({
+              color: 0xffff00
+            })
+        </pre>
+      </p>
+      <canvas id="color" width="400" height="300"></canvas>
+    </div>
+    <div class="item">
+      <p>
+        <em>emissive设置材质的自发光颜色</em>
+        <pre>
+            new THREE.MeshLambertMaterial({
+              emissive: 0xff0000
+            })
+        </pre>
+      </p>
+      <canvas id="emissive" width="400" height="300"></canvas>
+    </div>
+    <div class="item">
+      <p>
+        <pre>
+          new THREE.Mesh(new THREE.CubeGeometry(5, 5, 5)
+          new THREE.MeshLambertMaterial({
+            color: 0xffff00,
+            emissive: 0xff0000
+          })
+        </pre>
+      </p>
+      <canvas id="color_emissive" width="400" height="300"></canvas>
+    </div>
+    <div class="item">
+      <p>
+        <pre>
+          new THREE.SphereGeometry(3, 20, 8)
+          new THREE.MeshLambertMaterial({
+            color: 0xffff00,
+            emissive: 0xff0000
+          })
+        </pre>
+      </p>
+      <canvas id="sun" width="400" height="300"></canvas>
+    </div>
+  </div>
+</body>
+<script src="../assets/js/three.js"></script>
+<script>
+window.onload = init
+
+const objs = [
+  {id: 'color', cb(scene, light) {
+    const material = new THREE.MeshLambertMaterial({
+      color: 0xffff00
+    })
+    const cube = new THREE.Mesh(new THREE.CubeGeometry(5, 5, 5), material)
+    scene.add(cube)
+  }},
+  {id: 'emissive', cb(scene, light) {
+    const material = new THREE.MeshLambertMaterial({
+      emissive: 0xff0000
+    })
+    const cube = new THREE.Mesh(new THREE.CubeGeometry(5, 5, 5), material)
+    scene.add(cube)
+  }},
+  {id: 'color_emissive', cb(scene, light) {
+    const material = new THREE.MeshLambertMaterial({
+      color: 0xffff00,
+      emissive: 0xff0000
+    })
+    const cube = new THREE.Mesh(new THREE.CubeGeometry(5, 5, 5), material)
+    scene.add(cube)
+  }},
+  {id: 'sun', cb(scene, light) {
+    const material = new THREE.MeshLambertMaterial({
+      color: 0xffff00,
+      emissive: 0xff0000
+    })
+    const sphere = new THREE.Mesh(new THREE.SphereGeometry(3, 20, 8), material)
+    scene.add(sphere)
+  }}
+]
+
+function init() {
+  objs.forEach(obj => {
+    const {id, cb} = obj
+    createObj(id, cb)
+  })
+}
+
+function createObj(id, cb) {
+  const renderer = new THREE.WebGLRenderer({
+    canvas: document.querySelector(`#${id}`)
+  })
+  renderer.setClearColor(0x000000)
+  const scene = new THREE.Scene()
+  const camera = new THREE.OrthographicCamera(-5, 5, 3.75, -3.75, 0.1, 100)
+  camera.position.set(25, 25, 25)
+  camera.lookAt(new THREE.Vector3(0, 0, 0))
+  scene.add(camera)
+  
+  const light = new THREE.PointLight(0xffffff, 1, 100)
+  light.position.set(10, 15, 5)
+  scene.add(light)
+
+  cb(scene, light)
+
+  renderer.render(scene, camera)
+}
+</script>
+</html>

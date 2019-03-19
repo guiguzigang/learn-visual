@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>文字形状</title>
+  
+  <link rel="stylesheet" href="../assets/css/base.css">
+</head>
+<body>
+
+<script src="../assets/js/three.js"></script>
+<script src="../assets/js/utils.js"></script>
+<script>
+window.onload = init
+function init() {
+  const renderer = new THREE.WebGLRenderer()
+  renderer.setSize(400, 300)
+  document.body.appendChild(renderer.domElement)
+  const scene = new THREE.Scene()
+  const camera = new THREE.OrthographicCamera(-2.5, 2.5, 1.875, -1.875, 0.1, 100)
+  camera.position.set(5, 5, 20)
+  camera.lookAt(new THREE.Vector3(1, 0, 0))
+  scene.add(camera)
+
+  drawAxis(scene, 1)
+  const material = new THREE.MeshBasicMaterial({
+    color: 0xffff00,
+    wireframe: true
+  })
+
+  // const light = new THREE.DirectionalLight(0xffffff)
+  // light.position.set(-5, 10, 5)
+  // scene.add(light)
+
+  const loader = new THREE.FontLoader()
+  loader.load('../assets/fonts/helvetiker_regular.typeface.json', function(font) {
+    console.log(font)
+    const mesh = new THREE.Mesh(new THREE.TextGeometry('Hello', {
+      font: font,
+      size: 1,
+      height: 1
+    }), material)
+    scene.add(mesh)
+    renderer.render(scene, camera)
+  })
+/*
+  THREE.TextGeometry(text, parameters)
+  其中，text是文字字符串，parameters是以下参数组成的对象：
+
+  size：字号大小，一般为大写字母的高度
+  height：文字的厚度
+  curveSegments：弧线分段数，使得文字的曲线更加光滑
+  font：字体，默认是'helvetiker'，需对应引用的字体文件
+  weight：值为'normal'或'bold'，表示是否加粗
+  style：值为'normal'或'italics'，表示是否斜体
+  bevelEnabled：布尔值，是否使用倒角，意为在边缘处斜切
+  bevelThickness：倒角厚度
+  bevelSize：倒角宽度
+*/
+}
+</script>
+</body>
+</html>

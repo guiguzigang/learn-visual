@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>模型</title>
+</head>
+<body>
+<script src="../assets/js/three.js"></script>
+<script src="../assets/js/utils.js"></script>
+<script src="../assets/js/loaders/MTLLoader.js"></script>
+<script src="../assets/js/loaders/OBJLoader.js"></script>
+<script src="../assets/js/loaders/ColladaLoader.js"></script>
+<script>
+window.onload = init
+
+class Obj {
+  constructor(options = {}) {
+    this.options = options
+    this.renderer = null
+    this.scene = null
+    this.camera = null
+    this.mesh = null
+    this._animateId = null
+    this.init()
+  }
+
+  init() {
+    const {canvas, width = 400, height = 300} = this.options
+    if (canvas) {
+      this.renderer = new THREE.WebGLRenderer({canvas})
+      this.renderer.setClearColor(0x000000) 
+    } else {
+      this.renderer = new THREE.WebGLRenderer()
+      this.renderer.setSize(width, height)
+      document.body.appendChild(this.renderer.domElement)
+    }
+
+    this.scene = new THREE.Scene()
+
+    this.camera = new THREE.OrthographicCamera(-5, 5, 3.75, -3.75, 0.1, 100)
+    this.camera.position.set(15, 25, 25)
+    this.camera.lookAt(new THREE.Vector3(0, 2, 0))
+    this.scene.add(this.camera)
+
+    const light = new THREE.DirectionalLight(0xffffff)
+    light.position.set(20, 10, 5)
+    this.scene.add(light)
+    
+    this.loader()
+    console.log(this.renderer)
+    this.run()
+  }
+
+  // loader() {}
+
+  run() {
+    this.renderer.render(this.scene, this.camera)
+  }
+
+  stop() {
+    if (this._animateId) {
+      cancelAnimationFrame(this._animateId)
+      this._animateId = null
+    }
+  }
+}
+
+class NoMaterialObj extends Obj {
+  constructor() {
+    super(...arguments)
+  }
+
+  loader() {
+    const loader = new THREE.OBJLoader()
+    const self = this
+    
+    loader.load('../assets/source/port.obj', function(obj) {
+      obj.traverse(function(child) {
+        if (child instanceof THREE.Mesh) {
+          child.material.side = THREE.DoubleSide
+        }
+      })
+      
+      self.mesh = obj
+      self.scene.add(obj)
+    })
+  }
+
+  run() {
+    this.renderer.render(this.scene, this.camera)
+    if (this.mesh) {
+      this.mesh.rotation.y += 0.01
+      if (this.mesh.rotation.y > Math.PI * 2) {
+        this.mesh.rotation.y -= Math.PI * 2
+      }
+    }
+    this._animateId = requestAnimationFrame(_ => this.run())
+  }
+}
+
+class MaterialObj1 extends Obj {
+  constructor() {
+    super(...arguments)
+  }
+
+  loader() {
+    const loader = new THREE.OBJLoader()
+    const self = this
+    loader.load('../assets/source/port.obj', function(obj) {
+      obj.traverse(function(child) {
+        if (child instanceof THREE.Mesh) {
+          child.material = new THREE.MeshLambertMaterial({
+            color: 0xffff00,
+            side: THREE.DoubleSide
+          })
+        }
+      })
+
+      self.mesh = obj
+      self.scene.add(obj)
+      self.run()
+    })
+  }
+}
+
+class MaterialObj2 extends Obj {
+  constructor() {
+    super(...arguments)
+  }
+
+  loader() {
+    const mtlLoader = new THREE.MTLLoader()
+    mtlLoader.setPath('../assets/source/')
+    const self = this
+    mtlLoader.load('port.mtl', function(materials) {
+      materials.preload()
+      
+      const objLoader = new THREE.OBJLoader()
+      objLoader.setMaterials(materials)
+      objLoader.setPath('../assets/source/')
+      objLoader.load('port.obj', function(object) {
+        object.position.y = -95
+        object.children.length > 0 && self.scene.add(object.children[0])
+        self.run()
+      })
+    })
+  }
+}
+
+class MaterialObj3 extends Obj {
+  constructor() {
+    super(...arguments)
+  }
+
+  loader() {
+    const loader = new THREE.ColladaLoader()
+    const self = this
+    loader.load('../assets/source/port.dae', function(collada) {
+      const child = collada.scene.children
+      
+      child.length > 0 && self.scene.add(child[0])
+      self.run()
+    })
+  }
+}
+
+function init() {
+  new NoMaterialObj()
+  new MaterialObj1()
+  new MaterialObj2()
+  new MaterialObj3()
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>基本几何形状</title>
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <style>
+    
+  </style>
+</head>
+<body>
+  <h3><a href="http://www.ituring.com.cn/book/miniarticle/50172">基本几何形状</a></h3>
+  <section>
+    <h4>1.立方体  <pre>THREE.CubeGeometry(width, height, depth, widthSegments, heightSegments, depthSegments)</pre></h4>
+    <p>
+      参数说明：
+      <em>width是x方向上的长度；height是y方向上的长度；depth是z方向上的长度；后三个参数分别是在三个方向上的分段数，如widthSegments为3的话，代表x方向上水平分为三份</em>
+    </p>
+    <div class="obj-wrapper">
+      <div class="item">
+        <p>
+          <pre>new THREE.CubeGeometry(1, 2, 3)</pre>
+        </p>
+        <canvas id="cube" width="400" height="300"></canvas>
+      </div>
+      <div class="item">
+        <p>
+          <pre>new THREE.CubeGeometry(1, 2, 3, 2, 2, 3)</pre>
+        </p>
+        <canvas id="cubeSegments" width="400" height="300"></canvas>
+      </div>
+    </div>  
+  </section>
+  
+  <section>
+    <h4>
+      2.平面
+      <pre>THREE.PlaneGeometry(width, height, widthSegments, heightSegments)</pre>
+    </h4>
+    <p>参数说明：<em>width是x方向上的长度；height是y方向上的长度；后两个参数同样表示分段</em></p>
+    <div class="obj-wrapper">
+      <div class="item">
+        <p><pre>new THREE.PlaneGeometry(2, 4)</pre></p>
+        <canvas id="plane" width="400" height="300"></canvas>
+      </div>
+      <div class="item">
+        <p><pre>new THREE.PlaneGeometry(2, 4, 3, 4)</pre></p>
+        <canvas id="planeSegments" width="400" height="300"></canvas>
+      </div>
+    </div>
+  </section>
+ 
+  <section>
+    <h4>
+      3.球体
+      <pre>
+        THREE.SphereGeoMetry(radius, segmentsWidth, segmentsHeight, phiStart, phiLength, thetaStart, thetaLength)
+      </pre>
+    </h4>
+    <p>参数说明：<em>radius是半径；segmentsWidth表示经度上的切片数；segmentsHeight表示纬度上的切片数；phiStart表示经度开始的弧度；phiLength表示经度跨过的弧度；thetaStart表示纬度开始的弧度；thetaLength表示纬度跨过的弧度</em></p>
+    <div class="obj-wrapper">
+      <div class="item">
+        <p>
+          <pre>new THREE.SphereGeometry(3, 8, 6)</pre>
+        </p>
+        <canvas id="sphere1" width="400" height="300"></canvas>
+      </div>
+      <div class="item">
+        <p>
+          <pre>new THREE.SphereGeometry(3, 18, 12)</pre>
+        </p>
+        <canvas id="sphere2" width="400" height="300"></canvas>
+      </div>
+      <div class="item">
+        <p>
+          <pre>new THREE.SphereGeometry(3, 8, 6, Math.PI / 6, Math.PI / 3)</pre>
+        </p>
+        <canvas id="sphere3" width="400" height="300"></canvas>
+      </div>
+      <div class="item">
+        <p>
+          <pre>new THREE.SphereGeometry(3, 8, 6, 0, Math.PI * 2, Math.PI / 6, Math.PI / 3)</pre>
+        </p>
+        <canvas id="sphere4" width="400" height="300"></canvas>
+      </div>
+      <div class="item">
+        <p>
+          <pre>new THREE.SphereGeometry(3, 8, 6, 0, Math.PI * 2, Math.PI / 3, Math.PI / 6)</pre>
+        </p>
+        <canvas id="sphere5" width="400" height="300"></canvas>
+      </div>
+      <div class="item">
+        <p>
+          <pre>new THREE.SphereGeometry(3, 8, 6, Math.PI * 2, Math.PI, Math.PI / 3, Math.PI / 6)</pre>
+        </p>
+        <canvas id="sphere6" width="400" height="300"></canvas>
+      </div>
+    </div>
+  </section>
+  
+  <section>
+    <h4>
+      4.圆型
+      <pre>THREE.CircleGeometry(radius, segments, thetaStart, thetaLength)</pre>
+    </h4>
+    <p>参数说明：<em>参数参照球体</em></p>
+    <div class="obj-wrapper">
+      <div class="item">
+        <p>
+          <pre>new THREE.CircleGeometry(3, 18, Math.PI / 3, Math.PI / 3 * 4)</pre>
+        </p>
+        <canvas id="circle" width="400" height="300"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h4>
+      5.圆柱体
+      <pre>THREE.CylinderGeometry(radiusTop, radiusBottom, height, radiusSegments, heightSegments, openEnded)</pre>
+    </h4>
+    <p>参数说明：<em>radiusTop与radiusBottom分别是顶面和底面的半径，由此可知，当这两个参数设置为不同的值时，实际上创建的是一个圆台；height是圆柱体的高度；radiusSegments与heightSegments可类比球体中的分段；openEnded是一个布尔值，表示是否没有顶面和底面，缺省值为false，表示有顶面和底面</em></p>
+    <div class="obj-wrapper">
+      <div class="item">
+        <p>
+          <pre>new THREE.CylinderGeometry(2, 2, 4, 18, 3)</pre>
+        </p>
+        <canvas id="cylinder1" width="400" height="300"></canvas>
+      </div>
+      <div class="item">
+        <p>
+          <pre>new THREE.CylinderGeometry(2, 3, 4, 18, 3)</pre>
+        </p>
+        <canvas id="cylinder2" width="400" height="300"></canvas>
+      </div>
+      <div class="item">
+        <p>
+          <pre>new THREE.CylinderGeometry(2, 3, 4, 18, 3)</pre>
+        </p>
+        <canvas id="cylinder3" width="400" height="300"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h4>
+      6.正四面体（TetrahedronGeometry）、正八面体（OctahedronGeometry）、正二十面体（IcosahedronGeometry）
+      <pre>THREE.TetrahedronGeometry(radius, detail)</pre>
+      <pre>THREE.OctahedronGeometry(radius, detail)</pre>
+      <pre>THREE.IcosahedronGeometry(radius, detail)</pre>
+    </h4>
+    <p>参数说明：<em>radius是半径；detail是细节层次（Level of Detail）的层数，对于大面片数模型，可以控制在视角靠近物体时，显示面片数多的精细模型，而在离物体较远时，显示面片数较少的粗略模型。这里我们不对detail多作展开，一般可以对这个值缺省。</em></p>
+    <div class="obj-wrapper">
+      <div class="item">
+        <p>
+          <pre>new THREE.TetrahedronGeometry(3)</pre>
+        </p>
+        <canvas id="tetrahedron" width="400" height="300"></canvas>
+      </div>
+      <div class="item">
+        <p>
+          <pre>new THREE.OctahedronGeometry(3)</pre>
+        </p>
+        <canvas id="octahedron" width="400" height="300"></canvas>
+      </div>
+      <div class="item">
+        <p>
+          <pre>new THREE.IcosahedronGeometry(3)</pre>
+        </p>
+        <canvas id="icosahedron" width="400" height="300"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h4>
+      7.圆环面
+      <pre>THREE.TorusGeometry(radius, tube, radialSegments, tubularSegments, arc)</pre>
+    </h4>
+    <p>参数说明：<em>radius是圆环半径；tube是管道半径；radialSegments与tubularSegments分别是两个分段数，详见下图；arc是圆环面的弧度，缺省值为Math.PI * 2</em></p>
+    <p><img src="./torus.png" alt=""></p>
+    <div class="obj-wrapper">
+      <div class="item">
+        <p>
+          <pre>new THREE.TorusGeometry(3, 1, 4, 8)</pre>
+        </p>
+        <canvas id="torus1" width="400" height="300"></canvas>
+      </div>
+      <div class="item">
+        <p>
+          <pre>new THREE.TorusGeometry(3, 1, 12, 18)</pre>
+        </p>
+        <canvas id="torus2" width="400" height="300"></canvas>
+      </div>
+      <div class="item">
+        <p>
+          <pre>new THREE.TorusGeometry(3, 1, 4, 8, Math.PI / 3 * 2)</pre>
+        </p>
+        <canvas id="torus3" width="400" height="300"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h4>
+      8.圆环结
+      <pre>THREE.TorusKnotGeometry(radius, tube, radialSegments, tubularSegments, p, q, heightScale)</pre>
+    </h4>
+    <p>参数说明：<em>前四个参数在圆环面中已经有所介绍，p和q是控制其样式的参数，一般可以缺省，如果需要详细了解，请学习圆环结的相关知识；heightScale是在z轴方向上的缩放。</em></p>
+    <div class="obj-wrapper">
+      <div class="item">
+        <p>
+          <pre>new THREE.TorusKnotGeometry(2, 0.5, 32, 8)</pre>
+        </p>
+        <canvas id="torusKnot" width="400" height="300"></canvas>
+      </div>
+    </div>
+  </section>
+
+<script src="../assets/js/three.js"></script>
+<script src="../assets/js/utils.js"></script>
+<script>
+window.onload = init
+const objs = [
+  // 立方体
+  {id: 'cube', construct: 'CubeGeometry', args: [1, 2, 3]},
+  {id: 'cubeSegments', construct: 'CubeGeometry', args: [1, 2, 3, 2, 2, 3]},
+  // 平面
+  {id: 'plane', construct: 'PlaneGeometry', args: [2, 4]},
+  {id: 'planeSegments', construct: 'PlaneGeometry', args: [2, 4, 3, 4]},
+  // 球体
+  {id: 'sphere1', construct: 'SphereGeometry', args: [3, 8, 6]},
+  {id: 'sphere2', construct: 'SphereGeometry', args: [3, 18, 12]},
+  {id: 'sphere3', construct: 'SphereGeometry', args: [3, 8, 6, Math.PI / 6, Math.PI / 3]},
+  {id: 'sphere4', construct: 'SphereGeometry', args: [3, 8, 6, 0, Math.PI * 2, Math.PI / 6, Math.PI / 3]},
+  {id: 'sphere5', construct: 'SphereGeometry', args: [3, 8, 6, 0, Math.PI * 2, Math.PI / 3, Math.PI / 6]},
+  {id: 'sphere6', construct: 'SphereGeometry', args: [3, 8, 6, Math.PI * 2, Math.PI, Math.PI / 3, Math.PI / 6]},
+  // 圆型
+  {id: 'circle', construct: 'CircleGeometry', args: [3, 18, Math.PI / 3, Math.PI / 3 * 4]},
+  // 圆柱体
+  {id: 'cylinder1', construct: 'CylinderGeometry', args: [2, 2, 4, 18, 3]},
+  {id: 'cylinder2', construct: 'CylinderGeometry', args: [2, 3, 4, 18, 3]},
+  {id: 'cylinder3', construct: 'CylinderGeometry', args: [2, 3, 4, 18, 3, true]},
+  // 正四面体
+  {id: 'tetrahedron', construct: 'TetrahedronGeometry', args: [3]},
+  // 正八面体
+  {id: 'octahedron', construct: 'OctahedronGeometry', args: [3]},
+  // 正二十面体
+  {id: 'icosahedron', construct: 'IcosahedronGeometry', args: [3]},
+  // 圆环面
+  {id: 'torus1', construct: 'TorusGeometry', args: [3, 1, 4, 8]},
+  {id: 'torus2', construct: 'TorusGeometry', args: [3, 1, 12, 18]},
+  {id: 'torus3', construct: 'TorusGeometry', args: [3, 1, 4, 8, Math.PI / 3 * 2]},
+  // 圆环结
+  {id: 'torusKnot', construct: 'TorusKnotGeometry', args: [2, 0.5, 32, 8]},
+]
+function init() {
+  objs.forEach(obj => {
+    createObj(obj)
+  })
+
+  // const canvasArr = document.getElementsByTagName('canvas')
+  // for(let i = 0; i < canvasArr.length; i++) {
+  //   console.log(canvasArr[i].getContext('webgl').getExtension('WEBGL_lose_context'))
+  //   console.log(canvasArr[i].getContext('webgl'))
+  //   canvasArr[i].getContext('webgl').getExtension('WEBGL_lose_context').loseContext()
+  // }
+}
+
+function createObj(obj) {
+  const {id, construct, args} = obj
+  const {renderer, scene, camera} = initThree(id)
+  
+  drawAxis(scene)
+
+  const material = new THREE.MeshBasicMaterial({
+    color: 0xffff00,
+    wireframe: true
+  })
+  const _obj = new THREE.Mesh(
+    new THREE[construct](...args),
+    material
+  )
+  scene.add(_obj)
+
+  renderer.render(scene, camera)
+
+  // 丢失上下文
+  // renderer.forceContextLoss()
+  // renderer.context.getExtension('WEBGL_lose_context').loseContext()
+}
+
+function initThree(id) {
+  const renderer = new THREE.WebGLRenderer({
+    canvas: document.querySelector(`#${id}`)
+  })
+  renderer.setClearColor(0x000000)
+  const scene = new THREE.Scene()
+  const camera = new THREE.OrthographicCamera(-5, 5, 3.75, -3.75, 0.1, 100)
+  camera.position.set(25, 25, 25)
+  camera.lookAt(new THREE.Vector3(0, 0, 0))
+  scene.add(camera)
+  return {
+    renderer,
+    scene,
+    camera
+  }
+}
+
+</script>
+</body>
+</html>

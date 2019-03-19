@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>小球弹动动画</title>
+</head>
+<body>
+<div>
+  <button onclick="drop()">Drop</button>
+  <button onclick="stop()">Stop</button>
+  <button onclick="run()">Run</button>
+</div>
+<script src="../assets/js/utils.js"></script>
+<script src="../assets/js/three.js"></script>
+<script src="../assets/js/stat.js"></script>
+<script>
+  let renderer, scene, camera, animateId, stat, ballMesh, 
+    isMoving = false,
+    ballRadius = 0.5,
+    maxHeight = 5,
+    v = 0, // 速度
+    a = -0.01 // 加速度
+
+  window.onload = init
+
+  function init() {
+    stat = new Stats()
+    const statDom = stat.domElement
+    statDom.style.position = 'absolute'
+    statDom.style.right = '0px'
+    statDom.style.top = '0px'
+    document.body.appendChild(statDom)
+
+    renderer = new THREE.WebGLRenderer()
+    renderer.setSize(400, 300)
+    document.body.appendChild(renderer.domElement)
+    // renderer.setClearColor(0x000000)
+
+    scene = new THREE.Scene()
+
+    camera = new THREE.OrthographicCamera(-5, 5, 3.75, -3.75, 0.1, 100)
+    camera.position.set(5, 10, 20)
+    camera.lookAt(new THREE.Vector3(0, 3, 0))
+    scene.add(camera)
+
+    ballMesh = new THREE.Mesh(
+      new THREE.SphereGeometry(ballRadius, 16, 8),
+      new THREE.MeshLambertMaterial({
+        color: 0xffff00
+      })
+    )
+    ballMesh.position.y = ballRadius
+    scene.add(ballMesh)
+      
+
+    // ImageUtils.loadTexture 弃用，用TextureLoader代替
+    // const texture = THREE.ImageUtils.loadTexture('../assets/images/chess.png', {}, function() {
+    //   renderer.render(scene, camera)
+    // })
+    // texture.wrapS = texture.wrapT = THREE.RepeatWrapping
+    // texture.repeat.set(4, 4)
+
+    const loader = new THREE.TextureLoader()
+    const texture = loader.load('../assets/images/chess.png', function(texture) {
+      texture.wrapS = texture.wrapT = THREE.RepeatWrapping
+      texture.repeat.set(4, 4)
+    })
+    // console.log(texture)
+    
+    const plane = new THREE.Mesh(
+      new THREE.PlaneGeometry(5, 5),
+      new THREE.MeshLambertMaterial({
+        map: texture
+      })
+    )
+    plane.rotation.x = -Math.PI / 2
+    scene.add(plane)
+
+    var light = new THREE.DirectionalLight(0xffffff)
+    light.position.set(10, 10, 15)
+    scene.add(light)
+    
+    run()
+  }
+
+
+  function run() {
+    stat.begin()
+    
+    stop()
+    if (isMoving) {
+      ballMesh.position.y += v
+      v += a
+      
+      if (ballMesh.position.y <= ballRadius) {
+        // 撞击到了物体
+        v = -v * 0.9
+      }
+
+      if (Math.abs(v) < 0.001) {
+        isMoving = false
+        ballMesh.position.y = ballRadius
+      }
+    }
+    renderer.render(scene, camera)
+    animateId = requestAnimationFrame(run)
+
+    stat.end()
+  }
+
+  function stop() {
+    if (animateId) {
+      cancelAnimationFrame(animateId)
+      animateId = null
+    }
+  }
+
+  function drop() {
+    isMoving = true
+    ballMesh.position.y = maxHeight
+    v = 0
+  }
+</script>
+</body>
+</html>

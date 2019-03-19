@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>材质的纹理贴图</title>
+</head>
+<body>
+<script src="../assets/js/three.js"></script>
+<script>
+window.onload = init
+
+const objs = [
+  {
+    cameraPos: [25, 25, 25],
+    getMaterial(renderer, scene, camera) {
+      // THREE.ImageUtils.loadTexture has been deprecated. Use THREE.TextureLoader() instead
+      // const texture = new THREE.ImageUtils.loadTexture('../assets/images/0.png', {}, function() {
+      //   renderer.render(scene, camera)
+      // })
+      const loader = new THREE.TextureLoader()
+      const texture = loader.load(`../assets/images/0.png`, function() {
+        renderer.render(scene, camera)
+      })
+      return new THREE.MeshLambertMaterial({
+        map: texture
+      })
+    },
+    getGeometry(material) {
+      return new THREE.Mesh(
+        new THREE.CubeGeometry(5, 5, 5),
+        material
+      )
+    }
+  },
+  {
+    cameraPos: [25, 25, 25],
+    getMaterial(renderer, scene, camera) {
+      // THREE.ImageUtils.loadTexture has been deprecated. Use THREE.TextureLoader() instead
+      // const texture = new THREE.ImageUtils.loadTexture('../assets/images/0.png', {}, function() {
+      //   renderer.render(scene, camera)
+      // })
+      const loader = new THREE.TextureLoader()
+      const texture = loader.load(`../assets/images/0.png`, function() {
+        renderer.render(scene, camera)
+      })
+
+      return new THREE.MeshLambertMaterial({
+        map: texture
+      })
+    },
+    getGeometry(material) {
+      return new THREE.Mesh(
+        new THREE.SphereGeometry(5, 25, 15),
+        material
+      )
+    }
+  },
+  {
+    cameraPos: [25, 25, 25],
+    getMaterial(renderer, scene, camera) {
+      return Array.from({length: 6}, function(item, index) {
+        const loader = new THREE.TextureLoader()
+        const texture = loader.load(`../assets/images/${index}.png`, function() {
+          renderer.render(scene, camera)
+        })
+        return new THREE.MeshBasicMaterial({
+          // map: THREE.ImageUtils.loadTexture(`../assets/images/${index}.png`, {}, function() {
+          //   renderer.render(scene, camera)
+          // })
+          map: texture
+        })
+      })
+      // return Array.from({length: 6}, function(item, index) {
+      //   return new THREE.MeshBasicMaterial({
+      //     // THREE.ImageUtils.loadTexture has been deprecated. Use THREE.TextureLoader() instead
+      //     map: THREE.ImageUtils.loadTexture(`../assets/images/${index}.png`, {}, function() {
+      //       renderer.render(scene, camera)
+      //     })
+      //   })
+      // })
+    },
+    getGeometry(material) {
+      return new THREE.Mesh(
+        new THREE.CubeGeometry(5, 5, 5),
+        // three.js:46095 THREE.MeshFaceMaterial has been removed. Use an Array instead
+        // new THREE.MeshFaceMaterial(material),
+        material
+      )
+    }
+  },
+  {
+    cameraPos: [0, 0, 25],
+    getMaterial(renderer, scene, camera) {
+      // const texture = THREE.ImageUtils.loadTexture('../assets/images/chess.png', {}, function() {
+      //   renderer.render(scene, camera)
+      // })
+      // // 指定重复方式为两个方向（wrapS和wrapT）都重复
+      // texture.wrapS = texture.wrapT = THREE.RepeatWrapping
+      // // 两个方向上都重复4次
+      // texture.repeat.set(4, 4)
+      const loader = new THREE.TextureLoader()
+      const texture = loader.load('../assets/images/chess.png', function(texture) {
+        // 指定重复方式为两个方向（wrapS和wrapT）都重复
+        texture.wrapS = texture.wrapT = THREE.RepeatWrapping
+        // 两个方向上都重复4次
+        texture.repeat.set(4, 4)
+        renderer.render(scene, camera)
+      })
+      // console.log(texture)
+      return new THREE.MeshLambertMaterial({
+        map: texture
+      })
+    },
+    getGeometry(material) {
+      return new THREE.Mesh(
+        new THREE.PlaneGeometry(12, 12),
+        material
+      )
+    }
+  }
+]
+function init() {
+  objs.forEach(obj => {
+    const {cameraPos, getMaterial, getGeometry} = obj
+    createObj(cameraPos, getMaterial, getGeometry)
+  })
+}
+
+function createObj(cameraPos, getMaterial, getGeometry) {
+  const renderer = new THREE.WebGLRenderer()
+  renderer.setSize(400, 300)
+  document.body.appendChild(renderer.domElement)
+  renderer.setClearColor(0x000000)
+
+  const scene = new THREE.Scene()
+  const camera = new THREE.OrthographicCamera(-10, 10, 7.5, -7.5, 0.1, 100)
+  camera.position.set(...cameraPos)
+  camera.lookAt(new THREE.Vector3(0, 0, 0))
+  scene.add(camera)
+
+  const light = new THREE.PointLight(0xffffff, 1, 1000)
+  light.position.set(10, 15, 20)
+  scene.add(light)
+
+  const material = getMaterial(renderer, scene, camera)
+  const geometry = getGeometry(material)
+  scene.add(geometry)
+
+  renderer.render(scene, camera)
+}
+
+</script>
+</body>
+</html>

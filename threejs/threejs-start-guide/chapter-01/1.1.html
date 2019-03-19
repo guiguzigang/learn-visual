@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Chapter-01</title>
+  <link rel="stylesheet" href="../assets/css/base.css">
+</head>
+<body>
+  <!-- <canvas id="canvas" width="400" height="300">
+    您的浏览器不支持WebGL，请升级至高版本。
+  </canvas> -->
+</body>
+<script src="../assets/js/three.js"></script>
+<script>
+window.onload = function() {
+  init()
+}
+
+function init() {
+  // 1. 创建渲染器
+  // var renderer = new THREE.WebGLRenderer({
+  //   canvas: document.querySelector('#canvas')
+  // })
+  var renderer = new THREE.WebGLRenderer()
+  renderer.setSize(window.innerWidth, window.innerHeight)
+  // // js 插入canvas元素
+  document.body.appendChild(renderer.domElement)
+
+  // 设置背景色(用于清楚画布颜色)
+  renderer.setClearColor(0x000000)
+  
+  // 2. 创建场景
+  var scene = new THREE.Scene()
+
+  // 3. 定义透视投影的相机
+  var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+  camera.position.set(0, 0, 5)
+  // 将相机加入场景
+  scene.add(camera)
+  
+  var cube = new THREE.Mesh(new THREE.CubeGeometry(1, 2, 3), 
+    new THREE.MeshBasicMaterial({
+      color: 0xff0000
+    })  
+  )
+  // 将长方体加入场景中
+  scene.add(cube)
+
+  // 渲染
+  renderer.render(scene, camera)
+  console.log(scene, camera)
+
+  window.onresize = function() {
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+    camera.position.set(0, 0, 5)
+    // 将相机加入场景
+    scene.add(camera)
+    renderer.render(scene, camera)
+  }
+}
+</script>
+</html>

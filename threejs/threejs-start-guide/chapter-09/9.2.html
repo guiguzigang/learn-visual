@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>着色器</title>
+</head>
+<body>
+<script src="../assets/js/three.js"></script>
+<script>
+window.onload = init
+
+let scene = null,
+  camera = null,
+  renderer = null,
+  material = null,
+  cube = null
+
+function init() {
+  renderer = new THREE.WebGLRenderer()
+  renderer.setSize(400, 300)
+  document.body.appendChild(renderer.domElement)
+
+  scene = new THREE.Scene()
+  camera = new THREE.OrthographicCamera(-5, 5, 3.75, -3.75, 0.1, 100)
+  camera.position.set(5, 15, 25)
+  camera.lookAt(new THREE.Vector3(0, 0, 0))
+  scene.add(camera)
+
+  const light = new THREE.DirectionalLight()
+  light.position.set(3, 2, 5)
+  scene.add(light)
+
+  fetch('./shader/my.vs').then(function(vShader) {
+    return vShader.text()
+  }).then(function(vs) {
+    fetch('./shader/my.fs').then(function(fShader) {
+      return fShader.text()
+    }).then(function(fs) {
+      material = new THREE.ShaderMaterial({
+        vertexShader: vs,
+        fragmentShader: fs
+      })
+
+      cube = new THREE.Mesh(
+        new THREE.CubeGeometry(2, 2, 2),
+        material
+      )
+      scene.add(cube)
+
+      run()
+    })
+  })
+}
+
+function run() {
+  cube.rotation.y += 0.01
+  if (cube.rotation.y > Math.PI * 2) {
+    cube.rotation.y -= Math.PI * 2
+  }
+
+  renderer.render(scene, camera)
+  requestAnimationFrame(run)
+}
+</script>
+</body>
+</html>

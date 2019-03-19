@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>2.2</title>
+  <link rel="stylesheet" href="../assets/css/base.css">
+</head>
+<body>
+<script src="../assets/js/three.js"></script>
+<script>
+var renderer = new THREE.WebGLRenderer()
+renderer.setSize(400, 300)
+document.querySelector('body').appendChild(renderer.domElement)
+
+renderer.setClearColor(0x000000)
+
+var scene = new THREE.Scene()
+var camera = new THREE.PerspectiveCamera(45, 400 / 300, 1, 10)
+camera.position.set(0, 0, 5)
+// camera.lookAt(new THREE.Vector3(0, 0, 0))
+scene.add(camera)
+
+var cube = new THREE.Mesh(
+  new THREE.CubeGeometry(1, 2, 3),
+  new THREE.MeshBasicMaterial({
+    color: 0xff00000,
+    wireframe: true
+  })
+)
+
+scene.add(cube)
+
+renderer.render(scene, camera)
+</script>
+</body>
+</html>

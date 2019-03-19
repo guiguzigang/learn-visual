@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>聚光灯</title>
+</head>
+<body>
+<script src="../assets/js/three.js"></script>
+<script src="../assets/js/utils.js"></script>
+<script>
+window.onload = init
+
+let renderer = null,
+  camera = null,
+  scene = null,
+  cube = null,
+  alpha = 0,
+  animateId = null
+
+function init() {
+  renderer = new THREE.WebGLRenderer()
+  renderer.setSize(400, 300)
+  document.body.append(renderer.domElement)
+  // 告诉渲染器渲染阴影
+  renderer.shadowMap.enabled = true
+  // 实现软阴影的效果
+  renderer.shadowMapSoft = true
+
+  scene = new THREE.Scene()
+
+  camera = new THREE.OrthographicCamera(-5, 5, 3.75, -3.75, 0.1, 100)
+  camera.position.set(5, 15, 25)
+  camera.lookAt(new THREE.Vector3(0, 0, 0))
+  scene.add(camera)
+
+  const plane = new THREE.Mesh(
+    new THREE.PlaneGeometry(8, 8, 16, 16),
+    new THREE.MeshLambertMaterial({color: 0xcccccc, wireframe: true})
+  )
+  plane.rotation.x = -Math.PI / 2
+  plane.position.y = -1
+  // 对于接收阴影的物体调用
+  plane.receiveShadow = true
+  scene.add(plane)
+
+  cube = new THREE.Mesh(
+    new THREE.CubeGeometry(1, 1, 1),
+    new THREE.MeshLambertMaterial({
+      color: 0x00ff00
+    })
+  )
+  cube.position.x = 2
+  // 对于光源以及所有要产生阴影的物体调用
+  cube.castShadow = true
+  scene.add(cube)
+
+//   THREE.SpotLight(hex, intensity, distance, angle, exponent)
+// intensity 是亮度，缺省值为 1 ，表示 100%亮度； distance 是光源最远照射到的距离，缺省值为 0 ，angle 是聚光灯的张角，缺省值是 Math.PI / 3 ，最大值是 Math.PI / 2 ； exponent 是光强在偏离 target 的衰减指数（ target 需要在之后定义，缺省值为 (0, 0, 0) ），缺省值是 10 
+  const light = new THREE.SpotLight(0xffff00, 1, 100, Math.PI / 6, 25)
+  light.position.set(2, 5, 3)
+  light.target = cube
+  // 对于光源以及所有要产生阴影的物体调用
+  light.castShadow = true
+  // camera.near 与 camera.far 之间的物体将产生阴影
+  light.shadow.camera.near = 2
+  light.shadow.camera.far = 10
+  // 设置张角
+  light.shadow.camera.fov = 30
+  
+  // 设置shadow.mapSize.width 与 shadow.mapSize.height 值控制贴图的大小，来改变阴影的精确度
+  light.shadow.mapSize.width = 1024
+  light.shadow.mapSize.height = 1024
+  // 如果想要修改阴影的深浅，可以通过设置 shadowDarkness ，该值的范围是 0 到 1 ，越小越浅。
+  light.shadowDarkKness = 0.3
+  scene.add(light)
+  // 开启看到 阴影照相机的位置
+  // light.shadowCameraVisible = true
+  // new THREE.CameraHelper( light.shadow.camera )
+  const helper = new THREE.CameraHelper( light.shadow.camera )
+  scene.add( helper )
+
+  const ambient = new THREE.AmbientLight(0x666666)
+  scene.add(ambient)
+
+  run()
+}
+
+function run() {
+  alpha += 0.01
+  if (alpha > Math.PI * 2) {
+    alpha -= Math.PI * 2
+  }
+
+  cube.position.set(2 * Math.cos(alpha), 0, 2 * Math.sin(alpha))
+
+  renderer.render(scene, camera)
+
+  requestAnimationFrame(run)
+}
+</script>
+</body>
+</html>

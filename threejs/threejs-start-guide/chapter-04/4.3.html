@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>法向材质</title>
+  <link rel="stylesheet" href="../assets/css/base.css">
+</head>
+<body>
+    <div class="obj-wrapper">
+      <div class="item">
+        <p>
+          <pre>
+            camera.position.set(25, 25, 25)
+          </pre>
+        </p>
+        <canvas id="obj1" width="400" height="300"></canvas>
+      </div>
+      <div class="item">
+        <p>
+          <pre>
+            camera.position.set(5, 25, 25)
+          </pre>
+        </p>
+        <canvas id="obj2" width="400" height="300"></canvas>
+      </div>
+    </div>
+  <script src="../assets/js/three.js"></script>
+  <script>
+    window.onload = init
+    function init() {
+      const renderer1 = new THREE.WebGLRenderer({
+        canvas: document.querySelector('#obj1')
+      })
+      const renderer2 = new THREE.WebGLRenderer({
+        canvas: document.querySelector('#obj2')
+      })
+      renderer1.setClearColor(0x000000)
+      renderer2.setClearColor(0x000000)
+
+      const scene = new THREE.Scene()
+      const camera1 = new THREE.OrthographicCamera(-5, 5, 3.75, -3.75, 0.1, 100)
+      camera1.position.set(25, 25, 25)
+      camera1.lookAt(new THREE.Vector3(0, 0, 0))
+      scene.add(camera1)
+
+      const camera2 = new THREE.OrthographicCamera(-5, 5, 3.75, -3.75, 0.1, 100)
+      camera2.position.set(5, 25, 25)
+      camera2.lookAt(new THREE.Vector3(0, 0, 0))
+      
+      scene.add(camera2)
+      
+      const light = new THREE.PointLight(0xffffff, 1, 100)
+      light.position.set(10, 15, 5)
+      scene.add(light)
+
+      const material = new THREE.MeshNormalMaterial()
+
+      const cube = new THREE.Mesh(new THREE.CubeGeometry(5, 5, 5), material)
+      scene.add(cube)
+
+      renderer1.render(scene, camera1)
+      renderer2.render(scene, camera2)
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>光线</title>
+  <style>
+    button.active {
+      background: #33f;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <ul>
+    <li>
+      <button class="active" id="ambientGrey">THREE.AmbientLight(0xcccccc)</button>
+      <button id="ambientWhite">THREE.AmbientLight(0xffffff)</button>
+      <button id="ambientRed">THREE.AmbientLight(0xff0000)</button>
+    </li>
+    <li>
+      <button id="pointLight">THREE.PointLight(0xffffff, 2, 100)</button>
+    </li>
+    <li>
+      <button id="directionalLight">THREE.DirectionalLight()</button>
+    </li>
+  </ul>
+<script src="../assets/js/three.js"></script>
+<script>
+window.onload = init
+let renderer = null,
+  scene = null,
+  camera = null
+
+function init() {
+  renderer = new THREE.WebGLRenderer()
+  renderer.setSize(400, 300)
+  document.body.appendChild(renderer.domElement)
+  renderer.setClearColor(0x000000)
+
+  scene = new THREE.Scene()
+  camera = new THREE.OrthographicCamera(-5, 5, 3.75, -3.75, 0.1, 100)
+  camera.position.set(5, 15, 25)
+  camera.lookAt(new THREE.Vector3(0, 0, 0))
+  scene.add(camera)
+
+  // 设置环境光
+  // // const light = new THREE.AmbientLight(0xcccccc)
+  // const light = new THREE.AmbientLight(0xff0000)
+  // // const light = new THREE.AmbientLight(0xffffff)
+  // scene.add(light)
+  setAmbientColor(0xcccccc)
+
+  const whiteCube = createCube(0xffffff, 2, -3) 
+  scene.add(whiteCube)
+  
+  const greenCube = createCube(0x00ff00, 2, 3) 
+  scene.add(greenCube)
+
+  console.log(scene)
+  renderer.render(scene, camera)
+}
+
+function removeAmbientLight() {
+  let light = scene.children.find(item => item instanceof THREE.Light)
+  light && scene.remove(light)
+}
+
+function setAmbientColor(color) {
+  removeAmbientLight()
+  const light = new THREE.AmbientLight(color)
+  scene.add(light)
+}
+
+function setActiveClass(el) {
+  const buttons = document.querySelectorAll('button')
+  buttons.forEach(btn => {
+    btn.className = '' 
+  })
+  el.className = 'active'
+}
+
+const ambientGrey = document.querySelector('#ambientGrey'),
+  ambientWhite = document.querySelector('#ambientWhite'),
+  ambientRed = document.querySelector('#ambientRed'),
+  pointLight = document.querySelector('#pointLight'),
+  directionalLight = document.querySelector('#directionalLight')
+
+ambientGrey.addEventListener('click', function() {
+  setActiveClass(this)
+  setAmbientColor(0xcccccc)
+  renderer.render(scene, camera)
+}, false)
+
+ambientWhite.addEventListener('click', function() {
+  setActiveClass(this)
+  setAmbientColor(0xffffff)
+  renderer.render(scene, camera)
+}, false)
+
+ambientRed.addEventListener('click', function() {
+  setActiveClass(this)
+  setAmbientColor(0xff0000)
+  renderer.render(scene, camera)
+}, false)
+
+pointLight.addEventListener('click', function() {
+  setActiveClass(this)
+  removeAmbientLight()
+  // THREE.PointLight(hex, intensity, distance) 点光源
+  // 其中， hex 是光源十六进制的颜色值； intensity 是亮度，缺省值为 1 ，表示 100%亮度； distance 是光源最远照射到的距离，缺省值为 0 
+  const light = new THREE.PointLight(0xffffff, 2, 100)
+  light.position.set(0, 1.5, 2)
+  scene.add(light)
+  console.log(scene)
+  renderer.render(scene, camera)
+})
+
+directionalLight.addEventListener('click', function() {
+  setActiveClass(this)
+  removeAmbientLight()
+  // THREE.DirectionalLight(hex, intensity) 平行光
+  // 其中， hex 是光源十六进制的颜色值； intensity 是亮度，缺省值为 1，表示 100%亮度。
+  const light = new THREE.DirectionalLight()
+  light.position.set(5, 15, 25)
+  scene.add(light)
+  console.log(scene)
+  renderer.render(scene, camera)
+})
+
+function createCube(color, size, x) {
+  const cube = new THREE.Mesh(
+    new THREE.CubeGeometry(size, size, size),
+    new THREE.MeshLambertMaterial({
+      color: color
+    })
+  )
+  cube.position.x = x
+  return cube
+}
+
+
+</script>
+</body>
+</html>

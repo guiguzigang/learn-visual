@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>动画</title>
+</head>
+<body>
+  <div>
+    <button onclick="run()">运行</button>
+    <button onclick="stop()">停止</button>
+  </div>
+<script src="../assets/js/three.js"></script>
+<script src="../assets/js/utils.js"></script>
+<script src="../assets/js/stat.js"></script>
+<script>
+window.onload = init
+
+let scene, camera, renderer, mesh, timer, stat
+
+function init() {
+  stat = new Stats()
+  stat.domElement.style.position = 'absolute'
+  stat.domElement.style.right = '0px'
+  stat.domElement.style.top = '0px'
+  document.body.appendChild(stat.domElement)
+
+  renderer = new THREE.WebGLRenderer()
+  renderer.setSize(400, 300)
+  document.body.appendChild(renderer.domElement)
+  renderer.setClearColor(0x000000)
+
+  scene = new THREE.Scene()
+
+  camera = new THREE.OrthographicCamera(-5, 5, 3.75, -3.75, 0.1, 100)
+  camera.position.set(5, 5, 20)
+  camera.lookAt(new THREE.Vector3(0, 0, 0))
+  scene.add(camera)
+
+  mesh = new THREE.Mesh(
+    new THREE.CubeGeometry(1, 2, 3),
+    new THREE.MeshLambertMaterial({
+      color: 0xffff00
+    })
+  )
+
+  scene.add(mesh)
+
+  const light = new THREE.DirectionalLight(0xffffff)
+  light.position.set(20, 10, 5)
+  scene.add(light)
+
+  run()
+}
+
+function run() {
+  stat.begin()
+
+  stop()
+  mesh.rotation.y = (mesh.rotation.y + 0.01) % (Math.PI * 2)
+  renderer.render(scene, camera)
+  timer = requestAnimationFrame(run)
+
+  stat.end()
+}
+
+function stop() {
+  if (timer) {
+    cancelAnimationFrame(timer)
+    timer = null
+  }
+}
+</script>
+</body>
+</html>

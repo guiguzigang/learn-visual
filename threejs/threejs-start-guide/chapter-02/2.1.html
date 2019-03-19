@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>2.1</title>
+  <link rel="stylesheet" href="../assets/css/base.css">
+</head>
+<body>
+  <!-- <canvas id="canvas" width="400" height="300">
+    您的浏览器不支持WebGL，请升级至高版本。
+  </canvas> -->
+</body>
+<script src="../assets/js/three.js"></script>
+<script>
+window.onload = function() {
+  init()
+}
+
+// https://www.cnblogs.com/xulei1992/p/5707733.html
+
+function init() {
+  // 1. 创建渲染器
+  // var renderer = new THREE.WebGLRenderer({
+  //   canvas: document.querySelector('#canvas')
+  // })
+  var renderer = new THREE.WebGLRenderer()
+  renderer.setSize(400, 300)
+  // // js 插入canvas元素
+  document.body.appendChild(renderer.domElement)
+
+  // 设置背景色(用于清楚画布颜色)
+  renderer.setClearColor(0x000000)
+  
+  // 2. 创建场景
+  var scene = new THREE.Scene()
+
+  // 3. 定义透视投影的相机
+  // THREE.OrthographicCamera(left, right, top, bottom, near, far)
+  // (right - left)与(top - bottom)的比例与Canvas宽度与高度的比例一致, 保持照相机的横竖比例
+  // var camera = new THREE.OrthographicCamera(-2, 2, 1.5, -1.5, 1, 10)
+  // camera.position.set(1, 0, 5)
+  // var camera = new THREE.OrthographicCamera(-1, 1, 1.5, -1.5, 1, 10)
+  var camera = new THREE.OrthographicCamera(-1, 3, 1.5, -1.5, 1, 10)
+  // camera.position.set(0, 0, 5)
+  camera.position.set(4, -3, 5)
+  camera.lookAt(new THREE.Vector3(0, 0, 0))
+  // 将相机加入场景
+  scene.add(camera)
+  
+  var cube = new THREE.Mesh(
+    new THREE.CubeGeometry(1, 1, 1),
+    new THREE.MeshBasicMaterial({
+      color: 0xff0000,
+      wireframe: true // 线框
+    })
+  )
+  // 不指定material颜色随机
+  // var cube = new THREE.Mesh(
+  //   new THREE.CubeGeometry(1, 1, 1)
+  // )
+  scene.add(cube)
+
+  renderer.render(scene, camera)
+}
+</script>
+</html>

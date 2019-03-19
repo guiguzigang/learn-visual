@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Mesh Properties</title>
+  <link rel="stylesheet" href="../assets/css/base.css">
+</head>
+<body>
+  <script src="../assets/js/three.js"></script>
+  <script src="../assets/js/stats.min.js"></script>
+  <script src="../assets/js/dat.gui.min.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script>
+    window.onload = init
+
+    function init() {
+      const stats = initStats()
+      const renderer = new THREE.WebGLRenderer()
+      renderer.setSize(window.innerWidth, window.innerHeight)
+      renderer.setClearColor(0xEEEEEE)
+      renderer.shadowMap.enabled = true
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap
+      document.body.appendChild(renderer.domElement)
+
+      const scene = new THREE.Scene()
+      const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000)
+      camera.position.set(-30, 40, 30)
+      camera.lookAt(scene.position)
+      
+      const axis = new THREE.AxesHelper(20)
+      scene.add(axis)
+      console.log(axis)
+
+      const planeGeometry = new THREE.PlaneGeometry(60, 40, 1, 1)
+      const planeMaterial = new THREE.MeshLambertMaterial({
+        color: 0xffffff
+      })
+      const plane = new THREE.Mesh(planeGeometry, planeMaterial)
+      plane.receiveShadow = true
+      plane.rotation.x = -0.5 * Math.PI
+      plane.position.set(0, 0, 0)
+      scene.add(plane)
+
+      const ambientLight = new THREE.AmbientLight(0x0c0c0c)
+      scene.add(ambientLight)
+      
+      const spotLight = new THREE.SpotLight(0xffffff, 1, 100)
+      spotLight.position.set(-40, 60, 20)
+      spotLight.castShadow = true
+      spotLight.shadow.mapSize.width = 2048
+      spotLight.shadow.mapSize.height = 2048
+      scene.add(spotLight)
+      
+      const material = new THREE.MeshLambertMaterial({
+        color: 0x44ff44
+      })
+      const geom = new THREE.BoxGeometry(5, 8, 3)
+      const cube = new THREE.Mesh(geom, material)
+      // 决定该对象相对其父对象的位置，多数情况下就是THREE.Scene()
+      cube.position.y = 4
+      cube.castShadow = true
+      scene.add(cube)
+      
+      const controls = new function() {
+        this.scaleX = 1
+        this.scaleY = 1
+        this.scaleZ = 1
+
+        this.positionX = 0
+        this.positionY = 4
+        this.positionZ = 0
+
+        this.rotationX = 0
+        this.rotationY = 0
+        this.rotationZ = 0
+        this.scale = 1
+
+        this.translateX = 0
+        this.translateY = 0
+        this.translateZ = 0
+
+        this.visible = true
+
+        this.translate = function () {
+          cube.translateX(controls.translateX)
+          cube.translateY(controls.translateY)
+          cube.translateZ(controls.translateZ)
+
+          controls.positionX = cube.position.x
+          controls.positionY = cube.position.y
+          controls.positionZ = cube.position.z
+        }
+      }
+      const gui = new dat.GUI()
+      guiScale = gui.addFolder('scale')
+      guiScale.add(controls, 'scaleX', 0, 5)
+      guiScale.add(controls, 'scaleY', 0, 5)
+      guiScale.add(controls, 'scaleZ', 0, 5)
+
+      const guiPosition = gui.addFolder('position')
+      const contX = guiPosition.add(controls, 'positionX', -10, 10)
+      const contY = guiPosition.add(controls, 'positionY', -4, 20)
+      const contZ = guiPosition.add(controls, 'positionZ', -10, 10)
+
+      contX.listen()
+      contX.onChange(function(value) {
+        cube.position.x = controls.positionX
+      })
+      contY.listen()
+      contY.onChange(function(value) {
+        cube.position.y = controls.positionY
+      })
+      contZ.listen()
+      contZ.onChange(function(value) {
+        cube.position.z = controls.positionZ
+      })
+      
+      const guiRotation = gui.addFolder('rotation')
+      guiRotation.add(controls, 'rotationX', -4, 4)
+      guiRotation.add(controls, 'rotationY', -4, 4)
+      guiRotation.add(controls, 'rotationZ', -4, 4)
+
+      const guiTranslate = gui.addFolder('translate')
+      guiTranslate.add(controls, 'translateX', -10, 10)
+      guiTranslate.add(controls, 'translateY', -10, 10)
+      guiTranslate.add(controls, 'translateZ', -10, 10)
+      guiTranslate.add(controls, 'translate')
+
+      gui.add(controls, 'visible')
+
+      render()
+
+      function render() {
+        stats.update()
+
+        cube.visible = controls.visible
+        cube.rotation.x = controls.rotationX
+        cube.rotation.y = controls.rotationY
+        cube.rotation.z = controls.rotationZ
+        
+        cube.scale.set(controls.scaleX, controls.scaleY, controls.scaleZ)
+
+        renderer.render(scene, camera)
+        requestAnimationFrame(render)
+      }
+    }
+  </script>
+</body>
+</html>
